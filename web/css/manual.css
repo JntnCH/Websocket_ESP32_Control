@@ -1,0 +1,179 @@
+/* สไตล์สำหรับหน้าคู่มือการใช้งาน */
+.manual-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: var(--light-color);
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+  margin-bottom: 30px;
+}
+
+.manual-container h1 {
+  color: var(--primary-color);
+  margin-bottom: 30px;
+  text-align: center;
+  font-size: 28px;
+}
+
+.manual-container h2 {
+  color: var(--primary-color);
+  margin: 30px 0 20px;
+  font-size: 24px;
+  border-bottom: 2px solid var(--accent-color);
+  padding-bottom: 10px;
+}
+
+.manual-container h3 {
+  color: var(--secondary-color);
+  margin: 20px 0 15px;
+  font-size: 20px;
+}
+
+.manual-container p {
+  line-height: 1.6;
+  margin-bottom: 15px;
+}
+
+.manual-container ul, .manual-container ol {
+  margin-bottom: 20px;
+  padding-left: 20px;
+}
+
+.manual-container li {
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+
+/* สไตล์สำหรับสารบัญ */
+.toc {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  margin-bottom: 30px;
+}
+
+.toc h2 {
+  margin-top: 0;
+  font-size: 22px;
+}
+
+.toc ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.toc li {
+  margin-bottom: 10px;
+}
+
+.toc a {
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.toc a:hover {
+  color: var(--accent-color);
+  text-decoration: underline;
+}
+
+/* สไตล์สำหรับส่วนต่างๆ */
+section {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  margin-bottom: 30px;
+}
+
+section h2 {
+  margin-top: 0;
+}
+
+/* สไตล์สำหรับรูปภาพและแผนภาพ */
+.system-diagram, .screenshot {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.system-diagram img, .screenshot img {
+  max-width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.caption {
+  margin-top: 10px;
+  font-style: italic;
+  color: #666;
+}
+
+/* สไตล์สำหรับสถานะ */
+.status-online {
+  color: var(--success-color);
+  font-weight: bold;
+}
+
+.status-offline {
+  color: var(--danger-color);
+  font-weight: bold;
+}
+
+/* สไตล์สำหรับปุ่ม */
+.btn-on, .btn-off, .btn-timer {
+  padding: 5px 10px;
+  border-radius: 4px;
+  border: none;
+  font-size: 14px;
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+.btn-on {
+  background-color: var(--success-color);
+  color: white;
+}
+
+.btn-off {
+  background-color: var(--danger-color);
+  color: white;
+}
+
+.btn-timer {
+  background-color: var(--warning-color);
+  color: white;
+}
+
+/* การตอบสนองสำหรับอุปกรณ์มือถือ */
+@media (max-width: 768px) {
+  .manual-container {
+    padding: 15px;
+  }
+  
+  .manual-container h1 {
+    font-size: 24px;
+  }
+  
+  .manual-container h2 {
+    font-size: 20px;
+  }
+  
+  .manual-container h3 {
+    font-size: 18px;
+  }
+  
+  section {
+    padding: 15px;
+  }
+}
+
+/* สไตล์สำหรับเมนูที่กำลังใช้งาน */
+.menu a.active {
+  color: var(--accent-color);
+  font-weight: bold;
+  text-decoration: underline;
+}
+

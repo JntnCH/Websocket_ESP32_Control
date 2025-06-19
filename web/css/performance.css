@@ -1,0 +1,127 @@
+/* เพิ่มสไตล์สำหรับ Loading Spinner */
+.loading-spinner {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  display: none;
+}
+
+.loading-spinner.show {
+  display: block;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid var(--primary-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ปรับปรุงสไตล์ปุ่มให้มี transitions ที่เนียนขึ้น */
+.btn-primary, .btn-secondary, .btn-icon, .btn-success, .btn-danger, .btn-warning {
+  transition: all var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary:hover, .btn-secondary:hover, .btn-success:hover, .btn-danger:hover, .btn-warning:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-icon:hover {
+  transform: scale(1.1);
+}
+
+/* เพิ่ม ripple effect สำหรับปุ่ม */
+.btn-primary::before, .btn-secondary::before, .btn-success::before, .btn-danger::before, .btn-warning::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 5s, height 0.6s;
+}
+
+.btn-primary:active::before, .btn-secondary:active::before, .btn-success:active::before, .btn-danger:active::before, .btn-warning:active::before {
+  width: 300px;
+  height: 300px;
+}
+
+/* ปรับปรุงการ์ดให้มี hover effects */
+.dashboard-card, .device-card, .automation-card {
+  transition: all var(--transition-normal);
+}
+
+.dashboard-card:hover, .device-card:hover, .automation-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* เพิ่ม smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ปรับปรุง form elements */
+input, select, textarea {
+  transition: all var(--transition-normal);
+}
+
+input:focus, select:focus, textarea:focus {
+  transform: scale(1.02);
+  box-shadow: 0 0 0 3px rgba(3, 169, 244, 0.1);
+}
+
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* ปรับปรุง responsive design */
+@media (max-width: 768px) {
+  .nav-content {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .nav-links {
+    justify-content: center;
+    width: 100%;
+  }
+  
+  .nav-links a {
+    flex: 1;
+    text-align: center;
+    min-width: 0;
+  }
+}
+
+/* เพิ่ม focus styles สำหรับ accessibility */
+*:focus {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+.nav-links a:focus {
+  outline-color: white;
+}
+

@@ -1,0 +1,178 @@
+/* สไตล์สำหรับส่วนควบคุมระบบรดน้ำ-ผสมปุ๋ย-ใส่ปุ๋ยอัตโนมัติ */
+.irrigation-section {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 30px;
+}
+
+.irrigation-section h3 {
+  color: var(--primary-color);
+  margin-bottom: 20px;
+  font-size: 22px;
+  border-bottom: 2px solid var(--accent-color);
+  padding-bottom: 10px;
+}
+
+/* สไตล์สำหรับการ์ดระบบอัตโนมัติ */
+.auto-system-card {
+  background-color: var(--light-color);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.auto-system-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.auto-system-icon {
+  background-color: var(--primary-color);
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 15px;
+  font-size: 18px;
+}
+
+.auto-system-header h4 {
+  margin: 0;
+  font-size: 18px;
+  color: var(--dark-color);
+}
+
+.auto-system-status {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.status-item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.status-label {
+  font-size: 14px;
+  color: #666;
+}
+
+.status-value {
+  font-size: 16px;
+  font-weight: bold;
+  color: var(--dark-color);
+}
+
+.status-on {
+  color: var(--success-color);
+}
+
+.status-off {
+  color: var(--danger-color);
+}
+
+.auto-system-controls {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-auto {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 15px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex: 1;
+}
+
+.btn-auto:hover {
+  background-color: var(--secondary-color);
+}
+
+.btn-auto.active {
+  background-color: var(--success-color);
+}
+
+.btn-settings {
+  background-color: var(--accent-color);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 15px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-settings:hover {
+  opacity: 0.9;
+}
+
+/* สไตล์สำหรับประวัติการทำงาน */
+.history-card {
+  background-color: var(--light-color);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  padding: 20px;
+}
+
+.history-card h4 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 18px;
+  color: var(--dark-color);
+}
+
+.history-list {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.history-item {
+  display: flex;
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.history-item:last-child {
+  border-bottom: none;
+}
+
+.history-time {
+  min-width: 60px;
+  font-weight: bold;
+  color: var(--primary-color);
+  margin-right: 10px;
+}
+
+.history-event {
+  flex: 1;
+  color: var(--dark-color);
+}
+
+/* การตอบสนองสำหรับอุปกรณ์มือถือ */
+@media (max-width: 768px) {
+  .auto-system-status {
+    grid-template-columns: 1fr;
+  }
+  
+  .auto-system-controls {
+    flex-direction: column;
+  }
+}
+

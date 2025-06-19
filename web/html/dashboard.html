@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>แดชบอร์ด - ระบบควบคุม ESP32</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <!-- เพิ่ม Font Awesome สำหรับไอคอน -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <!-- เพิ่ม MQTT script ก่อน -->
+  <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+  <!-- เพิ่ม defer เพื่อให้โหลด script หลังจาก DOM พร้อมใช้งาน -->
+  <script src="../js/script.js" defer></script>
+  <script src="../js/dashboard_fixed.js" defer></script>
+  <script src="../js/navbar_behavior.js" defer></script>
+</head>
+
+<body>
+  <div id="navbar-placeholder"></div>
+
+  <div class="container">
+    <div class="dashboard-header">
+      <h1>แดชบอร์ด</h1>
+      <div class="dashboard-actions">
+        <button id="edit-dashboard" class="btn-primary"><i class="fas fa-edit"></i> แก้ไขแดชบอร์ด</button>
+        <button id="add-card" class="btn-secondary"><i class="fas fa-plus"></i> เพิ่มการ์ด</button>
+      </div>
+    </div>
+
+    <div class="dashboard-grid" id="dashboard-grid">
+      <!-- การ์ดแสดงสถานะอุปกรณ์ -->
+      <div class="dashboard-card" data-type="device-status">
+        <div class="card-header">
+          <h3>สถานะอุปกรณ์</h3>
+          <div class="card-actions">
+            <button class="btn-icon"><i class="fas fa-ellipsis-v"></i></button>
+          </div>
+        </div>
+        <div class="card-content">
+          <div class="device-status-list">
+            <div class="device-status-item online">
+              <span class="device-name">ESP32 ตัวที่ 1</span>
+              <span class="device-status">ออนไลน์</span>
+            </div>
+            <div class="device-status-item online">
+              <span class="device-name">ESP32 ตัวที่ 2</span>
+              <span class="device-status">ออนไลน์</span>
+            </div>
+            <div class="device-status-item offline">
+              <span class="device-name">ESP32 ตัวที่ 3</span>
+              <span class="device-status">ออฟไลน์</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- การ์ดแสดงค่าความชื้นในดิน -->
+      <div class="dashboard-card" data-type="sensor" data-sensor="soil_moisture">
+        <div class="card-header">
+          <h3>ความชื้นในดิน</h3>
+          <div class="card-actions">
+            <button class="btn-icon"><i class="fas fa-ellipsis-v"></i></button>
+          </div>
+        </div>
+        <div class="card-content">
+          <div class="sensor-value-large">
+            <span class="value">45</span>
+            <span class="unit">%</span>
+          </div>
+          <div class="sensor-chart">
+            <!-- กราฟแสดงค่าความชื้นในดิน -->
+            <canvas id="soil-moisture-chart"></canvas>
+          </div>
+          <div class="sensor-details">
+            <div class="sensor-detail-item">
+              <span class="detail-label">ต่ำสุด:</span>
+              <span class="detail-value">30%</span>
+            </div>
+            <div class="sensor-detail-item">
+              <span class="detail-label">สูงสุด:</span>
+              <span class="detail-value">80%</span>
+            </div>
+            <div class="sensor-detail-item">
+              <span class="detail-label">เฉลี่ย:</span>
+              <span class="detail-value">55%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- การ์ดแสดงค่าอุณหภูมิ -->
+      <div class="dashboard-card" data-type="sensor" data-sensor="temperature">
+        <div class="card-header">
+          <h3>อุณหภูมิ</h3>
+          <div class="card-actions">
+            <button class="btn-icon"><i class="fas fa-ellipsis-v"></i></button>
+          </div>
+        </div>
+        <div class="card-content">
+          <div class="sensor-value-large">
+            <span class="value">28.5</span>
+            <span class="unit">°C</span>
+          </div>
+          <div class="sensor-chart">
+            <!-- กราฟแสดงค่าอุณหภูมิ -->
+            <canvas id="temperature-chart"></canvas>
+          </div>
+          <div class="sensor-details">
+            <div class="sensor-detail-item">
+              <span class="detail-label">ต่ำสุด:</span>
+              <span class="detail-value">25.2°C</span>
+            </div>
+            <div class="sensor-detail-item">
+              <span class="detail-label">สูงสุด:</span>
+              <span class="detail-value">32.8°C</span>
+            </div>
+            <div class="sensor-detail-item">
+              <span class="detail-label">เฉลี่ย:</span>
+              <span class="detail-value">27.9°C</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- การ์ดควบคุมรีเลย์ -->
+      <div class="dashboard-card" data-type="relay-control">
+        <div class="card-header">
+          <h3>ควบคุมรีเลย์</h3>
+          <div class="card-actions">
+            <button class="btn-icon"><i class="fas fa-ellipsis-v"></i></button>
+          </div>
+        </div>
+        <div class="card-content">
+          <div class="relay-grid">
+            <div class="relay-item">
+              <div class="relay-name">ปั๊มน้ำ</div>
+              <div class="relay-toggle">
+                <label class="switch">
+                  <input type="checkbox" id="relay-1-1">
+                  <span class="slider round"></span>
+                </label>
+              </div>
+            </div>
+            <div class="relay-item">
+              <div class="relay-name">ปั๊มปุ๋ย</div>
+              <div class="relay-toggle">
+                <label class="switch">
+                  <input type="checkbox" id="relay-1-2">
+                  <span class="slider round"></span>
+                </label>
+              </div>
+            </div>
+            <div class="relay-item">
+              <div class="relay-name">วาล์วน้ำ 1</div>
+              <div class="relay-toggle">
+                <label class="switch">
+                  <input type="checkbox" id="relay-1-3">
+                  <span class="slider round"></span>
+                </label>
+              </div>
+            </div>
+            <div class="relay-item">
+              <div class="relay-name">วาล์วน้ำ 2</div>
+              <div class="relay-toggle">
+                <label class="switch">
+                  <input type="checkbox" id="relay-1-4">
+                  <span class="slider round"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- การ์ดแสดงสถานะระบบรดน้ำอัตโนมัติ -->
+      <div class="dashboard-card" data-type="automation-status">
+        <div class="card-header">
+          <h3>ระบบรดน้ำอัตโนมัติ</h3>
+          <div class="card-actions">
+            <button class="btn-icon"><i class="fas fa-ellipsis-v"></i></button>
+          </div>
+        </div>
+        <div class="card-content">
+          <div class="automation-status">
+            <div class="status-indicator active">
+              <i class="fas fa-check-circle"></i>
+              <span>ทำงาน</span>
+            </div>
+          </div>
+          <div class="automation-details">
+            <div class="detail-item">
+              <span class="detail-label">ความชื้นในดินปัจจุบัน:</span>
+              <span class="detail-value">45%</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">ความชื้นในดินต่ำสุด:</span>
+              <span class="detail-value">30%</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">ระยะเวลารดน้ำ:</span>
+              <span class="detail-value">5 นาที</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">ครั้งสุดท้ายที่รดน้ำ:</span>
+              <span class="detail-value">วันนี้ 10:30</span>
+            </div>
+          </div>
+          <div class="automation-controls">
+            <button class="btn-primary" id="toggle-auto-watering">ปิดระบบอัตโนมัติ</button>
+            <button class="btn-secondary" onclick="window.location.href='automation.html'">ตั้งค่า</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- การ์ดแสดงสถานะระบบผสมปุ๋ยและใส่ปุ๋ยอัตโนมัติ -->
+      <div class="dashboard-card" data-type="automation-status">
+        <div class="card-header">
+          <h3>ระบบผสมปุ๋ยและใส่ปุ๋ยอัตโนมัติ</h3>
+          <div class="card-actions">
+            <button class="btn-icon"><i class="fas fa-ellipsis-v"></i></button>
+          </div>
+        </div>
+        <div class="card-content">
+          <div class="automation-status">
+            <div class="status-indicator active">
+              <i class="fas fa-check-circle"></i>
+              <span>ทำงาน</span>
+            </div>
+          </div>
+          <div class="automation-details">
+            <div class="detail-item">
+              <span class="detail-label">ตารางการให้ปุ๋ย:</span>
+              <span class="detail-value">ทุกสัปดาห์</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">เวลาให้ปุ๋ย:</span>
+              <span class="detail-value">08:00</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">ครั้งถัดไป:</span>
+              <span class="detail-value">อาทิตย์หน้า 08:00</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">ครั้งสุดท้ายที่ให้ปุ๋ย:</span>
+              <span class="detail-value">อาทิตย์ที่แล้ว 08:00</span>
+            </div>
+          </div>
+          <div class="automation-controls">
+            <button class="btn-primary" id="toggle-auto-fertilizer">ปิดระบบอัตโนมัติ</button>
+            <button class="btn-secondary" onclick="window.location.href='automation.html'">ตั้งค่า</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- การ์ดแสดงประวัติการทำงาน -->
+      <div class="dashboard-card" data-type="history">
+        <div class="card-header">
+          <h3>ประวัติการทำงาน</h3>
+          <div class="card-actions">
+            <button class="btn-icon"><i class="fas fa-ellipsis-v"></i></button>
+          </div>
+        </div>
+        <div class="card-content">
+          <div class="history-list">
+            <div class="history-item">
+              <span class="history-time">10:30</span>
+              <span class="history-event">เริ่มรดน้ำอัตโนมัติ (ความชื้นในดิน 25%)</span>
+            </div>
+            <div class="history-item">
+              <span class="history-time">10:35</span>
+              <span class="history-event">หยุดรดน้ำอัตโนมัติ</span>
+            </div>
+            <div class="history-item">
+              <span class="history-time">08:00</span>
+              <span class="history-event">เริ่มให้ปุ๋ยอัตโนมัติ</span>
+            </div>
+            <div class="history-item">
+              <span class="history-time">08:02</span>
+              <span class="history-event">หยุดให้ปุ๋ยอัตโนมัติ</span>
+            </div>
+          </div>
+          <div class="history-actions">
+            <button class="btn-secondary" onclick="window.location.href='history.html'">ดูทั้งหมด</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</body>
+
+</html>
+

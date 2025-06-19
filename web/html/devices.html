@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>อุปกรณ์ - ระบบควบคุม ESP32</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/devices.css">
+  <!-- เพิ่ม Font Awesome สำหรับไอคอน -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <!-- เพิ่ม MQTT script ก่อน -->
+  <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+  <!-- เพิ่ม defer เพื่อให้โหลด script หลังจาก DOM พร้อมใช้งาน -->
+  <script src="../js/script.js" defer></script>
+  <script src="../js/devices.js" defer></script>
+  <script src="../js/navbar_behavior.js" defer></script>
+</head>
+
+<body>
+  <div id="navbar-placeholder"></div>
+
+  <div class="container">
+    <div class="devices-header">
+      <h1>อุปกรณ์</h1>
+      <div class="devices-actions">
+        <button id="add-device" class="btn-primary"><i class="fas fa-plus"></i> เพิ่มอุปกรณ์</button>
+        <button id="scan-devices" class="btn-secondary"><i class="fas fa-search"></i> ค้นหาอุปกรณ์</button>
+      </div>
+    </div>
+
+    <div class="devices-list">
+      <!-- อุปกรณ์ ESP32 ตัวที่ 1 -->
+      <div class="device-card" data-device-id="1">
+        <div class="device-header">
+          <div class="device-status online">
+            <i class="fas fa-circle"></i>
+            <span>ออนไลน์</span>
+          </div>
+          <div class="device-actions">
+            <button class="btn-icon device-menu-btn"><i class="fas fa-ellipsis-v"></i></button>
+            <div class="device-menu">
+              <a href="#" class="device-menu-item" data-action="edit"><i class="fas fa-edit"></i> แก้ไข</a>
+              <a href="#" class="device-menu-item" data-action="restart"><i class="fas fa-sync"></i> รีสตาร์ท</a>
+              <a href="#" class="device-menu-item" data-action="delete"><i class="fas fa-trash"></i> ลบ</a>
+            </div>
+          </div>
+        </div>
+        <div class="device-content">
+          <div class="device-info">
+            <h3>ESP32 ตัวที่ 1</h3>
+            <div class="device-details">
+              <div class="detail-item">
+                <span class="detail-label">IP Address:</span>
+                <span class="detail-value">192.168.1.100</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">MAC Address:</span>
+                <span class="detail-value">AA:BB:CC:DD:EE:FF</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">เวอร์ชัน Firmware:</span>
+                <span class="detail-value">1.0.0</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">อัปเดตล่าสุด:</span>
+                <span class="detail-value">วันนี้ 12:30</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="device-tabs">
+            <div class="tabs-header">
+              <button class="tab-btn active" data-tab="relays-1">รีเลย์</button>
+              <button class="tab-btn" data-tab="sensors-1">เซ็นเซอร์</button>
+              <button class="tab-btn" data-tab="settings-1">ตั้งค่า</button>
+            </div>
+            <div class="tabs-content">
+              <!-- แท็บรีเลย์ -->
+              <div class="tab-pane active" id="relays-1">
+                <div class="relays-grid">
+                  <div class="relay-item">
+                    <div class="relay-header">
+                      <span class="relay-name">ปั๊มน้ำ</span>
+                      <div class="relay-toggle">
+                        <label class="switch">
+                          <input type="checkbox" id="device-1-relay-1">
+                          <span class="slider round"></span>
+                        </label>
+                      </div>
+                    </div>
+                    <div class="relay-details">
+                      <div class="detail-item">
+                        <span class="detail-label">พิน GPIO:</span>
+                        <span class="detail-value">4</span>
+                      </div>
+                      <div class="detail-item">
+                        <span class="detail-label">สถานะ:</span>
+                        <span class="detail-value status-off">ปิด</span>
+                      </div>
+                      <div class="detail-item">
+                        <span class="detail-label">เปิดล่าสุด:</span>
+                        <span class="detail-value">10:30</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="relay-item">
+                    <div class="relay-header">
+                      <span class="relay-name">ปั๊มปุ๋ย</span>
+                      <div class="relay-toggle">
+                        <label class="switch">
+                          <input type="checkbox" id="device-1-relay-2">
+                          <span class="slider round"></span>
+                        </label>
+                      </div>
+                    </div>
+                    <div class="relay-details">
+                      <div class="detail-item">
+                        <span class="detail-label">พิน GPIO:</span>
+                        <span class="detail-value">5</span>
+                      </div>
+                      <div class="detail-item">
+                        <span class="detail-label">สถานะ:</span>
+                        <span class="detail-value status-off">ปิด</span>
+                      </div>
+                      <div class="detail-item">
+                        <span class="detail-label">เปิดล่าสุด:</span>
+                        <span class="detail-value">08:00</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="relay-item">
+                    <div class="relay-header">
+                      <span class="relay-name">วาล์วน้ำ 1</span>
+                      <div class="relay-toggle">
+                        <label class="switch">
+                          <input type="checkbox" id="device-1-relay-3">
+                          <span class="slider round"></span>
+                        </label>
+                      </div>
+                    </div>
+                    <div class="relay-details">
+                      <div class="detail-item">
+                        <span class="detail-label">พิน GPIO:</span>
+                        <span class="detail-value">12</span>
+                      </div>
+                      <div class="detail-item">
+                        <span class="detail-label">สถานะ:</span>
+                        <span class="detail-value status-off">ปิด</span>
+                      </div>
+                      <div class="detail-item">
+                        <span class="detail-label">เปิดล่าสุด:</span>
+                        <span class="detail-value">10:30</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="relay-item">
+                    <div class="relay-header">
+                      <span class="relay-name">วาล์วน้ำ 2</span>
+                      <div class="relay-toggle">
+                        <label class="switch">
+                          <input type="checkbox" id="device-1-relay-4">
+                          <span class="slider round"></span>
+                        </label>
+                      </div>
+                    </div>
+                    <div class="relay-details">
+                      <div class="detail-item">
+                        <span class="detail-label">พิน GPIO:</span>
+                        <span class="detail-value">13</span>
+                      </div>
+                      <div class="detail-item">
+                        <span class="detail-label">สถานะ:</span>
+                        <span class="detail-value status-off">ปิด</span>
+                      </div>
+                      <div class="detail-item">
+                        <span class="detail-label">เปิดล่าสุด:</span>
+                        <span class="detail-value">-</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="relays-actions">
+                  <button class="btn-primary" onclick="turnAllRelaysOn(1)">เปิดทั้งหมด</button>
+                  <button class="btn-secondary" onclick="turnAllRelaysOff(1)">ปิดทั้งหมด</button>
+                  <button class="btn-secondary" onclick="showAddRelayDialog(1)">เพิ่มรีเลย์</button>
+                </div>
+              </div>
+              
+              <!-- แท็บเซ็นเซอร์ -->
+              <div class="tab-pane" id="sensors-1">
+                <div class="sensors-grid">
+                  <div class="sensor-item">
+                    <div class="sensor-header">
+                      <span class="sensor-name">ความชื้นในดิน</span>
+                      <span class="sensor-value">45%</span>
+                    </div>
+                    <div class="sensor-chart">
+                      <canvas id="device-1-soil-moisture-chart"></canvas>
+                    </div>
+                    <div class="sensor-details">
+                      <div class="detail-item">
+                        <span class="detail-label">พิน GPIO:</span>
+                        <span class="detail-value">32</span>
+                      </div>
+                      <div class="detail-item">
+                        <span class="detail-label">ค่าต่ำสุด:</span>
+                        <span class="detail-value">30%</span>
+                      </div>
+                      <div class="detail-item">
+                        <span class="detail-label">ค่าสูงสุด:</span>
+                        <span class="detail-value">80%</span>
+                      </div>
+                      <div class="detail-item">
+                        <span class="detail-label">อัปเดตล่าสุด:</span>
+                        <span class="detail-value">เมื่อ 5 นาทีที่แล้ว</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="sensor-item">
+                    <div class="sensor-header">
+                      <span class="sensor-name">อุณหภูมิ</span>
+                      <span class="sensor-value">28.5°C</span>
+                    </div>
+                    <div class="sensor-chart">
+                      <canvas id="device-1-temperature-chart"></canvas>
+                    </div>
+                    <div class="sensor-details">
+                      <div class="detail-item">
+                        <span class="detail-label">พิน GPIO:</span>
+                        <span class="detail-value">36</span>
+                      </div>
+                      <div class="detail-item">
+                        <span class="detail-label">ค่าต่ำสุด:</span>
+                        <span class="detail-value">25.2°C</span>
+                      </div>
+                      <div class="detail-item">
+                        <span class="detail-label">ค่าสูงสุด:</span>
+                        <span class="detail-value">32.8°C</span>
+                      </div>
+                      <div class="detail-item">
+                        <span class="detail-label">อัปเดตล่าสุด:</span>
+                        <span class="detail-value">เมื่อ 5 นาทีที่แล้ว</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="sensors-actions">
+                  <button class="btn-primary" onclick="refreshAllSensors(1)">รีเฟรชข้อมูล</button>
+                  <button class="btn-secondary" onclick="showAddSensorDialog(1)">เพิ่มเซ็นเซอร์</button>
+                </div>
+              </div>
+              
+              <!-- แท็บตั้งค่า -->
+              <div class="tab-pane" id="settings-1">
+                <div class="device-settings">
+                  <div class="settings-section">
+                    <h4>ข้อมูลทั่วไป</h4>
+                    <div class="settings-form">
+                      <div class="form-group">
+                        <label for="device-1-name">ชื่ออุปกรณ์</label>
+                        <input type="text" id="device-1-name" value="ESP32 ตัวที่ 1">
+                      </div>
+                      <div class="form-group">
+                        <label for="device-1-location">ตำแหน่ง</label>
+                        <input type="text" id="device-1-location" value="แปลงผัก 1">
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="settings-section">
+                    <h4>การเชื่อมต่อ</h4>
+                    <div class="settings-form">
+                      <div class="form-group">
+                        <label for="device-1-wifi-ssid">WiFi SSID</label>
+                        <input type="text" id="device-1-wifi-ssid" value="MyWiFi">
+                      </div>
+                      <div class="form-group">
+                        <label for="device-1-wifi-password">WiFi Password</label>
+                        <input type="password" id="device-1-wifi-password" value="********">
+                      </div>
+                      <div class="form-group">
+                        <label for="device-1-mqtt-broker">MQTT Broker</label>
+                        <input type="text" id="device-1-mqtt-broker" value="mqtt://broker.hivemq.com:1883">
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="settings-section">
+                    <h4>การอัปเดต</h4>
+                    <div class="settings-form">
+                      <div class="form-group">
+                        <label for="device-1-update-interval">ช่วงเวลาอัปเดตข้อมูล (วินาที)</label>
+                        <input type="number" id="device-1-update-interval" value="300">
+                      </div>
+                      <div class="form-group">
+                        <label for="device-1-firmware-file">อัปเดต Firmware</label>
+                        <div class="file-upload">
+                          <input type="file" id="device-1-firmware-file">
+                          <button class="btn-secondary">เลือกไฟล์</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="settings-actions">
+                  <button class="btn-primary" onclick="saveDeviceSettings(1)">บันทึกการตั้งค่า</button>
+                  <button class="btn-secondary" onclick="resetDeviceSettings(1)">รีเซ็ตการตั้งค่า</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- อุปกรณ์ ESP32 ตัวที่ 2 -->
+      <div class="device-card" data-device-id="2">
+        <div class="device-header">
+          <div class="device-status online">
+            <i class="fas fa-circle"></i>
+            <span>ออนไลน์</span>
+          </div>
+          <div class="device-actions">
+            <button class="btn-icon device-menu-btn"><i class="fas fa-ellipsis-v"></i></button>
+            <div class="device-menu">
+              <a href="#" class="device-menu-item" data-action="edit"><i class="fas fa-edit"></i> แก้ไข</a>
+              <a href="#" class="device-menu-item" data-action="restart"><i class="fas fa-sync"></i> รีสตาร์ท</a>
+              <a href="#" class="device-menu-item" data-action="delete"><i class="fas fa-trash"></i> ลบ</a>
+            </div>
+          </div>
+        </div>
+        <div class="device-content">
+          <div class="device-info">
+            <h3>ESP32 ตัวที่ 2</h3>
+            <div class="device-details">
+              <div class="detail-item">
+                <span class="detail-label">IP Address:</span>
+                <span class="detail-value">192.168.1.101</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">MAC Address:</span>
+                <span class="detail-value">AA:BB:CC:DD:EE:00</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">เวอร์ชัน Firmware:</span>
+                <span class="detail-value">1.0.0</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">อัปเดตล่าสุด:</span>
+                <span class="detail-value">วันนี้ 12:35</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="device-tabs">
+            <div class="tabs-header">
+              <button class="tab-btn active" data-tab="relays-2">รีเลย์</button>
+              <button class="tab-btn" data-tab="sensors-2">เซ็นเซอร์</button>
+              <button class="tab-btn" data-tab="settings-2">ตั้งค่า</button>
+            </div>
+            <div class="tabs-content">
+              <!-- แท็บรีเลย์ -->
+              <div class="tab-pane active" id="relays-2">
+                <div class="relays-grid">
+                  <!-- รีเลย์ของ ESP32 ตัวที่ 2 -->
+                </div>
+                <div class="relays-actions">
+                  <button class="btn-primary" onclick="turnAllRelaysOn(2)">เปิดทั้งหมด</button>
+                  <button class="btn-secondary" onclick="turnAllRelaysOff(2)">ปิดทั้งหมด</button>
+                  <button class="btn-secondary" onclick="showAddRelayDialog(2)">เพิ่มรีเลย์</button>
+                </div>
+              </div>
+              
+              <!-- แท็บเซ็นเซอร์ -->
+              <div class="tab-pane" id="sensors-2">
+                <div class="sensors-grid">
+                  <!-- เซ็นเซอร์ของ ESP32 ตัวที่ 2 -->
+                </div>
+                <div class="sensors-actions">
+                  <button class="btn-primary" onclick="refreshAllSensors(2)">รีเฟรชข้อมูล</button>
+                  <button class="btn-secondary" onclick="showAddSensorDialog(2)">เพิ่มเซ็นเซอร์</button>
+                </div>
+              </div>
+              
+              <!-- แท็บตั้งค่า -->
+              <div class="tab-pane" id="settings-2">
+                <!-- ตั้งค่าของ ESP32 ตัวที่ 2 -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- อุปกรณ์ ESP32 ตัวที่ 3 -->
+      <div class="device-card" data-device-id="3">
+        <div class="device-header">
+          <div class="device-status offline">
+            <i class="fas fa-circle"></i>
+            <span>ออฟไลน์</span>
+          </div>
+          <div class="device-actions">
+            <button class="btn-icon device-menu-btn"><i class="fas fa-ellipsis-v"></i></button>
+            <div class="device-menu">
+              <a href="#" class="device-menu-item" data-action="edit"><i class="fas fa-edit"></i> แก้ไข</a>
+              <a href="#" class="device-menu-item" data-action="restart"><i class="fas fa-sync"></i> รีสตาร์ท</a>
+              <a href="#" class="device-menu-item" data-action="delete"><i class="fas fa-trash"></i> ลบ</a>
+            </div>
+          </div>
+        </div>
+        <div class="device-content">
+          <div class="device-info">
+            <h3>ESP32 ตัวที่ 3</h3>
+            <div class="device-details">
+              <div class="detail-item">
+                <span class="detail-label">IP Address:</span>
+                <span class="detail-value">192.168.1.102</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">MAC Address:</span>
+                <span class="detail-value">AA:BB:CC:DD:EE:11</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">เวอร์ชัน Firmware:</span>
+                <span class="detail-value">1.0.0</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">อัปเดตล่าสุด:</span>
+                <span class="detail-value">เมื่อวาน 18:45</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="device-tabs">
+            <div class="tabs-header">
+              <button class="tab-btn active" data-tab="relays-3">รีเลย์</button>
+              <button class="tab-btn" data-tab="sensors-3">เซ็นเซอร์</button>
+              <button class="tab-btn" data-tab="settings-3">ตั้งค่า</button>
+            </div>
+            <div class="tabs-content">
+              <!-- แท็บรีเลย์ -->
+              <div class="tab-pane active" id="relays-3">
+                <div class="relays-grid">
+                  <!-- รีเลย์ของ ESP32 ตัวที่ 3 -->
+                </div>
+                <div class="relays-actions">
+                  <button class="btn-primary" onclick="turnAllRelaysOn(3)" disabled>เปิดทั้งหมด</button>
+                  <button class="btn-secondary" onclick="turnAllRelaysOff(3)" disabled>ปิดทั้งหมด</button>
+                  <button class="btn-secondary" onclick="showAddRelayDialog(3)" disabled>เพิ่มรีเลย์</button>
+                </div>
+              </div>
+              
+              <!-- แท็บเซ็นเซอร์ -->
+              <div class="tab-pane" id="sensors-3">
+                <div class="sensors-grid">
+                  <!-- เซ็นเซอร์ของ ESP32 ตัวที่ 3 -->
+                </div>
+                <div class="sensors-actions">
+                  <button class="btn-primary" onclick="refreshAllSensors(3)" disabled>รีเฟรชข้อมูล</button>
+                  <button class="btn-secondary" onclick="showAddSensorDialog(3)" disabled>เพิ่มเซ็นเซอร์</button>
+                </div>
+              </div>
+              
+              <!-- แท็บตั้งค่า -->
+              <div class="tab-pane" id="settings-3">
+                <!-- ตั้งค่าของ ESP32 ตัวที่ 3 -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ไดอะล็อกเพิ่มอุปกรณ์ -->
+  <div class="dialog" id="add-device-dialog">
+    <div class="dialog-content">
+      <div class="dialog-header">
+        <h3>เพิ่มอุปกรณ์</h3>
+        <button class="btn-icon dialog-close"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="dialog-body">
+        <div class="form-group">
+          <label for="new-device-name">ชื่ออุปกรณ์</label>
+          <input type="text" id="new-device-name" placeholder="ESP32 ตัวที่ 4">
+        </div>
+        <div class="form-group">
+          <label for="new-device-ip">IP Address</label>
+          <input type="text" id="new-device-ip" placeholder="192.168.1.103">
+        </div>
+        <div class="form-group">
+          <label for="new-device-mac">MAC Address</label>
+          <input type="text" id="new-device-mac" placeholder="AA:BB:CC:DD:EE:22">
+        </div>
+        <div class="form-group">
+          <label for="new-device-location">ตำแหน่ง</label>
+          <input type="text" id="new-device-location" placeholder="แปลงผัก 4">
+        </div>
+      </div>
+      <div class="dialog-footer">
+        <button class="btn-secondary dialog-close">ยกเลิก</button>
+        <button class="btn-primary" id="add-device-confirm">เพิ่มอุปกรณ์</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</body>
+
+</html>
+

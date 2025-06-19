@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ระบบอัตโนมัติ - ระบบควบคุม ESP32</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/automation.css">
+  <!-- เพิ่ม Font Awesome สำหรับไอคอน -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <!-- เพิ่ม MQTT script ก่อน -->
+  <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+  <!-- เพิ่ม defer เพื่อให้โหลด script หลังจาก DOM พร้อมใช้งาน -->
+  <script src="../js/script.js" defer></script>
+  <script src="../js/automation.js" defer></script>
+  <script src="../js/navbar_behavior.js" defer></script>
+</head>
+
+<body>
+  <div id="navbar-placeholder"></div>
+
+  <div class="container">
+    <div class="automation-header">
+      <h1>ระบบอัตโนมัติ</h1>
+      <div class="automation-actions">
+        <button id="add-automation" class="btn-primary"><i class="fas fa-plus"></i> เพิ่มระบบอัตโนมัติ</button>
+      </div>
+    </div>
+
+    <div class="automation-tabs">
+      <div class="tabs-header">
+        <button class="tab-btn active" data-tab="schedules">ตารางเวลา</button>
+        <button class="tab-btn" data-tab="triggers">ทริกเกอร์</button>
+        <button class="tab-btn" data-tab="conditions">เงื่อนไข</button>
+        <button class="tab-btn" data-tab="history">ประวัติ</button>
+      </div>
+      <div class="tabs-content">
+        <!-- แท็บตารางเวลา -->
+        <div class="tab-pane active" id="schedules">
+          <div class="automation-list">
+            <!-- ตารางเวลารดน้ำ -->
+            <div class="automation-card" data-automation-id="1">
+              <div class="automation-header">
+                <div class="automation-status active">
+                  <label class="switch">
+                    <input type="checkbox" checked>
+                    <span class="slider round"></span>
+                  </label>
+                </div>
+                <div class="automation-title">
+                  <h3>รดน้ำตอนเช้า</h3>
+                  <span class="automation-type schedule">ตารางเวลา</span>
+                </div>
+                <div class="automation-actions">
+                  <button class="btn-icon automation-menu-btn"><i class="fas fa-ellipsis-v"></i></button>
+                  <div class="automation-menu">
+                    <a href="#" class="automation-menu-item" data-action="edit"><i class="fas fa-edit"></i> แก้ไข</a>
+                    <a href="#" class="automation-menu-item" data-action="duplicate"><i class="fas fa-copy"></i> ทำซ้ำ</a>
+                    <a href="#" class="automation-menu-item" data-action="delete"><i class="fas fa-trash"></i> ลบ</a>
+                  </div>
+                </div>
+              </div>
+              <div class="automation-content">
+                <div class="automation-details">
+                  <div class="detail-item">
+                    <span class="detail-label">เวลา:</span>
+                    <span class="detail-value">06:00 น. ทุกวัน</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-label">อุปกรณ์:</span>
+                    <span class="detail-value">ESP32 ตัวที่ 1</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-label">การทำงาน:</span>
+                    <span class="detail-value">เปิดปั๊มน้ำ, เปิดวาล์วน้ำ 1</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-label">ระยะเวลา:</span>
+                    <span class="detail-value">15 นาที</span>
+                  </div>
+                </div>
+                <div class="automation-next">
+                  <span class="next-label">ทำงานครั้งต่อไป:</span>
+                  <span class="next-value">พรุ่งนี้ 06:00 น.</span>
+                </div>
+              </div>
+            </div>
+            
+            <!-- ตารางเวลาให้ปุ๋ย -->
+            <div class="automation-card" data-automation-id="2">
+              <div class="automation-header">
+                <div class="automation-status active">
+                  <label class="switch">
+                    <input type="checkbox" checked>
+                    <span class="slider round"></span>
+                  </label>
+                </div>
+                <div class="automation-title">
+                  <h3>ให้ปุ๋ยประจำสัปดาห์</h3>
+                  <span class="automation-type schedule">ตารางเวลา</span>
+                </div>
+                <div class="automation-actions">
+                  <button class="btn-icon automation-menu-btn"><i class="fas fa-ellipsis-v"></i></button>
+                  <div class="automation-menu">
+                    <a href="#" class="automation-menu-item" data-action="edit"><i class="fas fa-edit"></i> แก้ไข</a>
+                    <a href="#" class="automation-menu-item" data-action="duplicate"><i class="fas fa-copy"></i> ทำซ้ำ</a>
+                    <a href="#" class="automation-menu-item" data-action="delete"><i class="fas fa-trash"></i> ลบ</a>
+                  </div>
+                </div>
+              </div>
+              <div class="automation-content">
+                <div class="automation-details">
+                  <div class="detail-item">
+                    <span class="detail-label">เวลา:</span>
+                    <span class="detail-value">07:00 น. ทุกวันอาทิตย์</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-label">อุปกรณ์:</span>
+                    <span class="detail-value">ESP32 ตัวที่ 1</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-label">การทำงาน:</span>
+                    <span class="detail-value">เปิดปั๊มน้ำ, เปิดปั๊มปุ๋ย, เปิดวาล์วน้ำ 1</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-label">ระยะเวลา:</span>
+                    <span class="detail-value">10 นาที</span>
+                  </div>
+                </div>
+                <div class="automation-next">
+                  <span class="next-label">ทำงานครั้งต่อไป:</span>
+                  <span class="next-value">วันอาทิตย์ 07:00 น.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- แท็บทริกเกอร์ -->
+        <div class="tab-pane" id="triggers">
+          <div class="automation-list">
+            <!-- ทริกเกอร์ความชื้นในดินต่ำ -->
+            <div class="automation-card" data-automation-id="3">
+              <div class="automation-header">
+                <div class="automation-status active">
+                  <label class="switch">
+                    <input type="checkbox" checked>
+                    <span class="slider round"></span>
+                  </label>
+                </div>
+                <div class="automation-title">
+                  <h3>รดน้ำเมื่อดินแห้ง</h3>
+                  <span class="automation-type trigger">ทริกเกอร์</span>
+                </div>
+                <div class="automation-actions">
+                  <button class="btn-icon automation-menu-btn"><i class="fas fa-ellipsis-v"></i></button>
+                  <div class="automation-menu">
+                    <a href="#" class="automation-menu-item" data-action="edit"><i class="fas fa-edit"></i> แก้ไข</a>
+                    <a href="#" class="automation-menu-item" data-action="duplicate"><i class="fas fa-copy"></i> ทำซ้ำ</a>
+                    <a href="#" class="automation-menu-item" data-action="delete"><i class="fas fa-trash"></i> ลบ</a>
+                  </div>
+                </div>
+              </div>
+              <div class="automation-content">
+                <div class="automation-details">
+                  <div class="detail-item">
+                    <span class="detail-label">เงื่อนไข:</span>
+                    <span class="detail-value">ความชื้นในดิน < 30%</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-label">อุปกรณ์:</span>
+                    <span class="detail-value">ESP32 ตัวที่ 1</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-label">การทำงาน:</span>
+                    <span class="detail-value">เปิดปั๊มน้ำ, เปิดวาล์วน้ำ 1</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-label">ระยะเวลา:</span>
+                    <span class="detail-value">จนกว่าความชื้นในดิน > 60%</span>
+                  </div>
+                </div>
+                <div class="automation-next">
+                  <span class="next-label">สถานะปัจจุบัน:</span>
+                  <span class="next-value">ความชื้นในดิน 45% (ไม่ทำงาน)</span>
+                </div>
+              </div>
+            </div>
+            
+            <!-- ทริกเกอร์อุณหภูมิสูง -->
+            <div class="automation-card" data-automation-id="4">
+              <div class="automation-header">
+                <div class="automation-status inactive">
+                  <label class="switch">
+                    <input type="checkbox">
+                    <span class="slider round"></span>
+                  </label>
+                </div>
+                <div class="automation-title">
+                  <h3>รดน้ำเมื่ออากาศร้อน</h3>
+                  <span class="automation-type trigger">ทริกเกอร์</span>
+                </div>
+                <div class="automation-actions">
+                  <button class="btn-icon automation-menu-btn"><i class="fas fa-ellipsis-v"></i></button>
+                  <div class="automation-menu">
+                    <a href="#" class="automation-menu-item" data-action="edit"><i class="fas fa-edit"></i> แก้ไข</a>
+                    <a href="#" class="automation-menu-item" data-action="duplicate"><i class="fas fa-copy"></i> ทำซ้ำ</a>
+                    <a href="#" class="automation-menu-item" data-action="delete"><i class="fas fa-trash"></i> ลบ</a>
+                  </div>
+                </div>
+              </div>
+              <div class="automation-content">
+                <div class="automation-details">
+                  <div class="detail-item">
+                    <span class="detail-label">เงื่อนไข:</span>
+                    <span class="detail-value">อุณหภูมิ > 35°C</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-label">อุปกรณ์:</span>
+                    <span class="detail-value">ESP32 ตัวที่ 1</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-label">การทำงาน:</span>
+                    <span class="detail-value">เปิดปั๊มน้ำ, เปิดวาล์วน้ำ 1, เปิดวาล์วน้ำ 2</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-label">ระยะเวลา:</span>
+                    <span class="detail-value">5 นาที</span>
+                  </div>
+                </div>
+                <div class="automation-next">
+                  <span class="next-label">สถานะปัจจุบัน:</span>
+                  <span class="next-value">อุณหภูมิ 28.5°C (ไม่ทำงาน)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- แท็บเงื่อนไข -->
+        <div class="tab-pane" id="conditions">
+          <div class="automation-list">
+            <!-- เงื่อนไขรดน้ำเมื่อไม่มีฝน -->
+            <div class="automation-card" data-automation-id="5">
+              <div class="automation-header">
+                <div class="automation-status active">
+                  <label class="switch">
+                    <input type="checkbox" checked>
+                    <span class="slider round"></span>
+                  </label>
+                </div>
+                <div class="automation-title">
+                  <h3>รดน้ำเมื่อไม่มีฝน</h3>
+                  <span class="automation-type condition">เงื่อนไข</span>
+                </div>
+                <div class="automation-actions">
+                  <button class="btn-icon automation-menu-btn"><i class="fas fa-ellipsis-v"></i></button>
+                  <div class="automation-menu">
+                    <a href="#" class="automation-menu-item" data-action="edit"><i class="fas fa-edit"></i> แก้ไข</a>
+                    <a href="#" class="automation-menu-item" data-action="duplicate"><i class="fas fa-copy"></i> ทำซ้ำ</a>
+                    <a href="#" class="automation-menu-item" data-action="delete"><i class="fas fa-trash"></i> ลบ</a>
+                  </div>
+                </div>
+              </div>
+              <div class="automation-content">
+                <div class="automation-details">
+                  <div class="detail-item">
+                    <span class="detail-label">เงื่อนไข:</span>
+                    <span class="detail-value">ไม่มีฝนตกใน 24 ชั่วโมงที่ผ่านมา</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-label">อุปกรณ์:</span>
+                    <span class="detail-value">ESP32 ตัวที่ 1</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-label">การทำงาน:</span>
+                    <span class="detail-value">เปิดปั๊มน้ำ, เปิดวาล์วน้ำ 1, เปิดวาล์วน้ำ 2</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-label">ระยะเวลา:</span>
+                    <span class="detail-value">20 นาที</span>
+                  </div>
+                </div>
+                <div class="automation-next">
+                  <span class="next-label">สถานะปัจจุบัน:</span>
+                  <span class="next-value">ไม่มีฝนตกใน 36 ชั่วโมง (พร้อมทำงาน)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- แท็บประวัติ -->
+        <div class="tab-pane" id="history">
+          <div class="history-list">
+            <div class="history-item">
+              <div class="history-time">วันนี้ 06:00 น.</div>
+              <div class="history-content">
+                <div class="history-title">รดน้ำตอนเช้า</div>
+                <div class="history-details">เปิดปั๊มน้ำ, เปิดวาล์วน้ำ 1 เป็นเวลา 15 นาที</div>
+              </div>
+              <div class="history-status success">สำเร็จ</div>
+            </div>
+            
+            <div class="history-item">
+              <div class="history-time">เมื่อวาน 14:32 น.</div>
+              <div class="history-content">
+                <div class="history-title">รดน้ำเมื่อดินแห้ง</div>
+                <div class="history-details">เปิดปั๊มน้ำ, เปิดวาล์วน้ำ 1 จนกว่าความชื้นในดิน > 60%</div>
+              </div>
+              <div class="history-status success">สำเร็จ</div>
+            </div>
+            
+            <div class="history-item">
+              <div class="history-time">เมื่อวาน 06:00 น.</div>
+              <div class="history-content">
+                <div class="history-title">รดน้ำตอนเช้า</div>
+                <div class="history-details">เปิดปั๊มน้ำ, เปิดวาล์วน้ำ 1 เป็นเวลา 15 นาที</div>
+              </div>
+              <div class="history-status success">สำเร็จ</div>
+            </div>
+            
+            <div class="history-item">
+              <div class="history-time">2 วันก่อน 15:45 น.</div>
+              <div class="history-content">
+                <div class="history-title">รดน้ำเมื่ออากาศร้อน</div>
+                <div class="history-details">เปิดปั๊มน้ำ, เปิดวาล์วน้ำ 1, เปิดวาล์วน้ำ 2 เป็นเวลา 5 นาที</div>
+              </div>
+              <div class="history-status error">ล้มเหลว (ปั๊มน้ำไม่ทำงาน)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ไดอะล็อกเพิ่มระบบอัตโนมัติ -->
+  <div class="dialog" id="add-automation-dialog">
+    <div class="dialog-content">
+      <div class="dialog-header">
+        <h3>เพิ่มระบบอัตโนมัติ</h3>
+        <button class="btn-icon dialog-close"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="dialog-body">
+        <div class="form-group">
+          <label for="new-automation-name">ชื่อระบบอัตโนมัติ</label>
+          <input type="text" id="new-automation-name" placeholder="รดน้ำตอนเย็น">
+        </div>
+        <div class="form-group">
+          <label for="new-automation-type">ประเภท</label>
+          <select id="new-automation-type">
+            <option value="schedule">ตารางเวลา</option>
+            <option value="trigger">ทริกเกอร์</option>
+            <option value="condition">เงื่อนไข</option>
+          </select>
+        </div>
+        
+        <!-- ส่วนตารางเวลา -->
+        <div class="automation-type-section" id="schedule-section">
+          <div class="form-group">
+            <label for="schedule-time">เวลา</label>
+            <input type="time" id="schedule-time" value="18:00">
+          </div>
+          <div class="form-group">
+            <label for="schedule-days">วัน</label>
+            <div class="days-selector">
+              <label><input type="checkbox" value="0"> อา</label>
+              <label><input type="checkbox" value="1"> จ</label>
+              <label><input type="checkbox" value="2"> อ</label>
+              <label><input type="checkbox" value="3"> พ</label>
+              <label><input type="checkbox" value="4"> พฤ</label>
+              <label><input type="checkbox" value="5"> ศ</label>
+              <label><input type="checkbox" value="6"> ส</label>
+            </div>
+          </div>
+        </div>
+        
+        <!-- ส่วนทริกเกอร์ -->
+        <div class="automation-type-section" id="trigger-section" style="display: none;">
+          <div class="form-group">
+            <label for="trigger-sensor">เซ็นเซอร์</label>
+            <select id="trigger-sensor">
+              <option value="soil-moisture">ความชื้นในดิน</option>
+              <option value="temperature">อุณหภูมิ</option>
+              <option value="humidity">ความชื้นในอากาศ</option>
+              <option value="light">แสง</option>
+              <option value="water-level">ระดับน้ำ</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="trigger-condition">เงื่อนไข</label>
+            <div class="condition-selector">
+              <select id="trigger-operator">
+                <option value="lt">น้อยกว่า</option>
+                <option value="gt">มากกว่า</option>
+                <option value="eq">เท่ากับ</option>
+                <option value="lte">น้อยกว่าหรือเท่ากับ</option>
+                <option value="gte">มากกว่าหรือเท่ากับ</option>
+              </select>
+              <input type="number" id="trigger-value" value="30">
+              <span id="trigger-unit">%</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- ส่วนเงื่อนไข -->
+        <div class="automation-type-section" id="condition-section" style="display: none;">
+          <div class="form-group">
+            <label for="condition-type">ประเภทเงื่อนไข</label>
+            <select id="condition-type">
+              <option value="no-rain">ไม่มีฝน</option>
+              <option value="daytime">กลางวัน</option>
+              <option value="nighttime">กลางคืน</option>
+              <option value="custom">กำหนดเอง</option>
+            </select>
+          </div>
+          <div class="form-group" id="custom-condition-group" style="display: none;">
+            <label for="custom-condition">เงื่อนไขกำหนดเอง</label>
+            <textarea id="custom-condition" placeholder="ความชื้นในดิน < 30% และ อุณหภูมิ > 30°C"></textarea>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="automation-device">อุปกรณ์</label>
+          <select id="automation-device">
+            <option value="1">ESP32 ตัวที่ 1</option>
+            <option value="2">ESP32 ตัวที่ 2</option>
+            <option value="3">ESP32 ตัวที่ 3</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label>การทำงาน</label>
+          <div class="actions-selector">
+            <label><input type="checkbox" value="pump"> เปิดปั๊มน้ำ</label>
+            <label><input type="checkbox" value="fertilizer"> เปิดปั๊มปุ๋ย</label>
+            <label><input type="checkbox" value="valve1"> เปิดวาล์วน้ำ 1</label>
+            <label><input type="checkbox" value="valve2"> เปิดวาล์วน้ำ 2</label>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="automation-duration">ระยะเวลา</label>
+          <div class="duration-selector">
+            <input type="number" id="automation-duration" value="15">
+            <select id="automation-duration-unit">
+              <option value="minutes">นาที</option>
+              <option value="hours">ชั่วโมง</option>
+              <option value="sensor">จนกว่าเซ็นเซอร์จะถึงค่าที่กำหนด</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="form-group" id="sensor-stop-condition" style="display: none;">
+          <label for="stop-sensor">เงื่อนไขการหยุดทำงาน</label>
+          <div class="condition-selector">
+            <select id="stop-sensor">
+              <option value="soil-moisture">ความชื้นในดิน</option>
+              <option value="temperature">อุณหภูมิ</option>
+              <option value="humidity">ความชื้นในอากาศ</option>
+              <option value="light">แสง</option>
+              <option value="water-level">ระดับน้ำ</option>
+            </select>
+            <select id="stop-operator">
+              <option value="lt">น้อยกว่า</option>
+              <option value="gt">มากกว่า</option>
+              <option value="eq">เท่ากับ</option>
+              <option value="lte">น้อยกว่าหรือเท่ากับ</option>
+              <option value="gte">มากกว่าหรือเท่ากับ</option>
+            </select>
+            <input type="number" id="stop-value" value="60">
+            <span id="stop-unit">%</span>
+          </div>
+        </div>
+      </div>
+      <div class="dialog-footer">
+        <button class="btn-secondary dialog-close">ยกเลิก</button>
+        <button class="btn-primary" id="add-automation-confirm">เพิ่มระบบอัตโนมัติ</button>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
+

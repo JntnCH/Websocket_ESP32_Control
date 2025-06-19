@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ตั้งค่าเซ็นเซอร์ - ระบบควบคุม ESP32</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/settings.css">
+  <!-- เพิ่ม Font Awesome สำหรับไอคอน -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <!-- เพิ่ม defer เพื่อให้โหลด script หลังจาก DOM พร้อมใช้งาน -->
+  <script src="../js/settings.js" defer></script>
+  <script src="../js/navbar_behavior.js" defer></script>
+</head>
+
+<body>
+  <div id="navbar-placeholder"></div>
+
+  <div class="settings-container">
+    <h1>ตั้งค่าเซ็นเซอร์และอุปกรณ์</h1>
+
+    <!-- ส่วนเลือก ESP32 -->
+    <div class="settings-section">
+      <h2>เลือก ESP32</h2>
+      <div class="esp-selector">
+        <select id="esp-select" class="settings-select">
+          <option value="1">ESP32 ตัวที่ 1</option>
+          <option value="2">ESP32 ตัวที่ 2</option>
+          <option value="3">ESP32 ตัวที่ 3</option>
+        </select>
+        <button id="add-esp" class="settings-btn">เพิ่ม ESP32</button>
+      </div>
+    </div>
+
+    <!-- ส่วนจัดการเซ็นเซอร์ -->
+    <div class="settings-section">
+      <h2>จัดการเซ็นเซอร์</h2>
+      <div class="sensor-management">
+        <div class="sensor-list-container">
+          <h3>เซ็นเซอร์ที่ใช้งาน</h3>
+          <div id="active-sensors" class="sensor-list">
+            <!-- เซ็นเซอร์จะถูกเพิ่มโดย JavaScript -->
+          </div>
+        </div>
+
+        <div class="add-sensor-form">
+          <h3>เพิ่มเซ็นเซอร์</h3>
+          <div class="form-group">
+            <label for="sensor-type">ประเภทเซ็นเซอร์:</label>
+            <select id="sensor-type" class="settings-select">
+              <option value="water_flow">อัตราการไหลของน้ำ</option>
+              <option value="soil_moisture">ความชื้นในดิน</option>
+              <option value="temperature">อุณหภูมิ</option>
+              <option value="water_level">ระดับน้ำ</option>
+              <option value="light_level">ระดับแสง</option>
+              <option value="ph">ค่า pH</option>
+              <option value="ec">ค่า EC (ความนำไฟฟ้า)</option>
+              <option value="nutrient_level">ระดับปุ๋ย</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="sensor-name">ชื่อเซ็นเซอร์:</label>
+            <input type="text" id="sensor-name" class="settings-input" placeholder="ระบุชื่อเซ็นเซอร์">
+          </div>
+          <div class="form-group">
+            <label for="sensor-pin">พิน GPIO:</label>
+            <input type="number" id="sensor-pin" class="settings-input" placeholder="ระบุพิน GPIO">
+          </div>
+          <div class="form-group">
+            <label for="sensor-unit">หน่วย:</label>
+            <input type="text" id="sensor-unit" class="settings-input" placeholder="ระบุหน่วย">
+          </div>
+          <button id="add-sensor" class="settings-btn">เพิ่มเซ็นเซอร์</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ส่วนตั้งค่าระบบรดน้ำ-ผสมปุ๋ย-ใส่ปุ๋ยอัตโนมัติ -->
+    <div class="settings-section">
+      <h2>ตั้งค่าระบบรดน้ำ-ผสมปุ๋ย-ใส่ปุ๋ยอัตโนมัติ</h2>
+      
+      <div class="irrigation-settings">
+        <h3>ตั้งค่าการรดน้ำอัตโนมัติ</h3>
+        <div class="form-group">
+          <label for="moisture-threshold">ความชื้นในดินต่ำสุด (%):</label>
+          <input type="number" id="moisture-threshold" class="settings-input" min="0" max="100" value="30">
+        </div>
+        <div class="form-group">
+          <label for="watering-duration">ระยะเวลารดน้ำ (นาที):</label>
+          <input type="number" id="watering-duration" class="settings-input" min="1" value="5">
+        </div>
+        <div class="form-group">
+          <label for="watering-relay">รีเลย์สำหรับปั๊มน้ำ:</label>
+          <select id="watering-relay" class="settings-select">
+            <option value="1">รีเลย์ 1</option>
+            <option value="2">รีเลย์ 2</option>
+            <option value="3">รีเลย์ 3</option>
+            <option value="4">รีเลย์ 4</option>
+            <option value="5">รีเลย์ 5</option>
+            <option value="6">รีเลย์ 6</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="fertilizer-settings">
+        <h3>ตั้งค่าการให้ปุ๋ยอัตโนมัติ</h3>
+        <div class="form-group">
+          <label for="fertilizer-schedule">ตารางการให้ปุ๋ย:</label>
+          <select id="fertilizer-schedule" class="settings-select">
+            <option value="daily">ทุกวัน</option>
+            <option value="weekly">ทุกสัปดาห์</option>
+            <option value="biweekly">ทุก 2 สัปดาห์</option>
+            <option value="monthly">ทุกเดือน</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="fertilizer-time">เวลาให้ปุ๋ย:</label>
+          <input type="time" id="fertilizer-time" class="settings-input" value="08:00">
+        </div>
+        <div class="form-group">
+          <label for="fertilizer-duration">ระยะเวลาให้ปุ๋ย (นาที):</label>
+          <input type="number" id="fertilizer-duration" class="settings-input" min="1" value="2">
+        </div>
+        <div class="form-group">
+          <label for="fertilizer-relay">รีเลย์สำหรับปั๊มปุ๋ย:</label>
+          <select id="fertilizer-relay" class="settings-select">
+            <option value="1">รีเลย์ 1</option>
+            <option value="2">รีเลย์ 2</option>
+            <option value="3">รีเลย์ 3</option>
+            <option value="4">รีเลย์ 4</option>
+            <option value="5">รีเลย์ 5</option>
+            <option value="6">รีเลย์ 6</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- ส่วนตั้งค่าการแจ้งเตือน Telegram -->
+    <div class="settings-section">
+      <h2>ตั้งค่าการแจ้งเตือน Telegram</h2>
+      <div class="telegram-settings">
+        <div class="form-group">
+          <label for="telegram-token">Telegram Bot Token:</label>
+          <input type="text" id="telegram-token" class="settings-input" placeholder="ระบุ Telegram Bot Token">
+        </div>
+        <div class="form-group">
+          <label for="telegram-chat-id">Telegram Chat ID:</label>
+          <input type="text" id="telegram-chat-id" class="settings-input" placeholder="ระบุ Telegram Chat ID">
+        </div>
+        <div class="notification-options">
+          <h3>ตั้งค่าการแจ้งเตือน</h3>
+          <div class="checkbox-group">
+            <input type="checkbox" id="notify-watering" checked>
+            <label for="notify-watering">แจ้งเตือนเมื่อรดน้ำ</label>
+          </div>
+          <div class="checkbox-group">
+            <input type="checkbox" id="notify-fertilizing" checked>
+            <label for="notify-fertilizing">แจ้งเตือนเมื่อให้ปุ๋ย</label>
+          </div>
+          <div class="checkbox-group">
+            <input type="checkbox" id="notify-low-moisture" checked>
+            <label for="notify-low-moisture">แจ้งเตือนเมื่อความชื้นในดินต่ำ</label>
+          </div>
+          <div class="checkbox-group">
+            <input type="checkbox" id="notify-low-water" checked>
+            <label for="notify-low-water">แจ้งเตือนเมื่อระดับน้ำต่ำ</label>
+          </div>
+          <div class="checkbox-group">
+            <input type="checkbox" id="notify-low-fertilizer" checked>
+            <label for="notify-low-fertilizer">แจ้งเตือนเมื่อระดับปุ๋ยต่ำ</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ปุ่มบันทึกการตั้งค่า -->
+    <div class="settings-actions">
+      <button id="save-settings" class="settings-btn save-btn">บันทึกการตั้งค่า</button>
+      <button id="reset-settings" class="settings-btn reset-btn">รีเซ็ตการตั้งค่า</button>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 ระบบควบคุม ESP32 หลายตัวพร้อมกัน</p>
+    </div>
+  </footer>
+</body>
+
+</html>
+
