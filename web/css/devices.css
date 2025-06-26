@@ -421,7 +421,7 @@ input:checked + .slider:before {
 }
 
 /* รองรับการแสดงผลบนมือถือ */
-@media (max-width: 768px) {
+@media (max-width: 480px) {
   .devices-header {
     flex-direction: column;
     align-items: flex-start;
