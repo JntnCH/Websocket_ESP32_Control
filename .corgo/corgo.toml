@@ -1,0 +1,6 @@
+[dependencies]
+esp-idf-sys = { version = "0.33", features = ["binstart"] }
+esp-idf-hal = "0.42"
+esp-idf-svc = "0.47"
+embedded-svc = "0.26"
+anyhow = "1.0"
