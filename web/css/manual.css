@@ -6,7 +6,7 @@
   background-color: var(--light-color);
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  margin-top: 20px;
+  margin-top: 30px;
   margin-bottom: 30px;
 }
 
@@ -175,5 +175,6 @@ section h2 {
   color: var(--accent-color);
   font-weight: bold;
   text-decoration: underline;
+  border-radius: 30px;
 }
 

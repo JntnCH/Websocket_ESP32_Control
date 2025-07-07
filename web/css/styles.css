@@ -159,7 +159,7 @@ main {
 
 /* สไตล์สำหรับปุ่ม */
 .btn-primary, .btn-secondary, .btn-icon, .btn-success, .btn-danger, .btn-warning {
-  padding: 10px 16px;
+  padding: 15px 16px;
   border: none;
   border-radius: 30px;
   cursor: pointer;
@@ -167,7 +167,7 @@ main {
   font-weight: 500;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   transition: all 0.3s ease;
   text-decoration: none;
   white-space: nowrap;
